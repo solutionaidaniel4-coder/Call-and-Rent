@@ -2,9 +2,7 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import CarCard from '@/components/CarCard';
-import BookingModal from '@/components/BookingModal';
 import FilterDrawer from '@/components/FilterDrawer';
-import WhatsAppButton from '@/components/WhatsAppButton';
 import Header from '@/components/Header';
 import { getCars } from '@/app/actions/booking';
 import { Car } from '@/lib/supabase';
@@ -12,8 +10,6 @@ import { Car } from '@/lib/supabase';
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedTransmission, setSelectedTransmission] = useState<string>('all');
-  const [selectedCar, setSelectedCar] = useState<Car | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState<boolean>(false);
   const [cars, setCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -33,16 +29,6 @@ export default function Home() {
 
     fetchCarsData();
   }, []);
-
-  const handleBookNow = (car: Car) => {
-    setSelectedCar(car);
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setSelectedCar(null);
-  };
 
   const handleClearFilters = () => {
     setSelectedCategory('all');
@@ -181,7 +167,7 @@ export default function Home() {
           {filteredCars.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredCars.map((car) => (
-                <CarCard key={car.id} car={car} onBookNow={handleBookNow} />
+                <CarCard key={car.id} car={car} />
               ))}
             </div>
           ) : (
@@ -207,15 +193,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Booking Modal */}
-      {selectedCar && (
-        <BookingModal
-          isOpen={isModalOpen}
-          onClose={handleCloseModal}
-          car={selectedCar}
-        />
-      )}
-
       {/* Mobile Filter Drawer */}
       <FilterDrawer
         isOpen={isFilterDrawerOpen}
@@ -227,8 +204,6 @@ export default function Home() {
         onClearFilters={handleClearFilters}
       />
 
-      {/* WhatsApp Button */}
-      <WhatsAppButton carName={selectedCar?.name} />
     </div>
   );
 }

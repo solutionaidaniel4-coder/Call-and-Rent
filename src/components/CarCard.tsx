@@ -1,6 +1,6 @@
 'use client';
 
-import { Settings, Users, Fuel, Check } from 'lucide-react';
+import { Settings, Users } from 'lucide-react';
 
 interface CarCardProps {
   car: {
@@ -11,10 +11,9 @@ interface CarCardProps {
     transmission: string;
     image: string;
   };
-  onBookNow: (car: any) => void;
 }
 
-export default function CarCard({ car, onBookNow }: CarCardProps) {
+export default function CarCard({ car }: CarCardProps) {
   const getTransmissionIcon = (transmission: string) => {
     return <Settings className="w-5 h-5 text-charcoal-600" />;
   };
@@ -43,13 +42,25 @@ export default function CarCard({ car, onBookNow }: CarCardProps) {
           </span>
         </div>
         
-        {/* Placeholder Car */}
+        {/* Car Image */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-32 h-20 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#40E0BA20' }}>
-            <svg className="w-12 h-12" style={{ color: '#40E0BA' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-            </svg>
-          </div>
+          <img 
+            src={car.image} 
+            alt={car.name}
+            className="w-full h-full object-cover"
+            onError={(e) => {
+              // Fallback to placeholder if image fails to load
+              const target = e.target as HTMLImageElement;
+              target.style.display = 'none';
+              target.parentElement!.innerHTML = `
+                <div class="w-32 h-20 rounded-lg flex items-center justify-center" style="background-color: #40E0BA20;">
+                  <svg class="w-12 h-12" style="color: #40E0BA;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                  </svg>
+                </div>
+              `;
+            }}
+          />
         </div>
       </div>
 
@@ -73,20 +84,12 @@ export default function CarCard({ car, onBookNow }: CarCardProps) {
         {/* Divider */}
         <div className="border-t border-charcoal-100 my-4"></div>
 
-        {/* Price & Button Row */}
+        {/* Price Row */}
         <div className="flex items-center justify-between">
           <div>
             <div className="text-3xl font-bold" style={{ color: '#40E0BA' }}>${car.price_per_day}</div>
             <div className="text-sm text-charcoal-500">per day</div>
           </div>
-          
-          <button 
-            onClick={() => onBookNow(car)}
-            className="px-6 py-3 rounded-xl font-semibold text-white transition-all duration-200 hover:opacity-90 hover:shadow-md"
-            style={{ backgroundColor: '#40E0BA' }}
-          >
-            Book Now
-          </button>
         </div>
       </div>
     </div>

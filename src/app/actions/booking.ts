@@ -26,7 +26,7 @@ export async function getCars(): Promise<Car[]> {
           category: 'Premium',
           price_per_day: 160,
           transmission: 'Automatic',
-          image: '/api/placeholder/400/300',
+          image: '/cars/mercedes-w204.jpg',
           status: 'available',
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString()

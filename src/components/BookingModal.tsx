@@ -82,7 +82,7 @@ export default function BookingModal({ isOpen, onClose, car }: BookingModalProps
         customer_name: formData.name,
         whatsapp_number: formData.whatsappNumber,
         pick_up_date: formData.pickUpDate,
-        drop_off_date: formData.dropOffDate || null,
+        drop_off_date: formData.dropOffDate || undefined,
         total_price: finalPrice,
         price_per_day: car.price_per_day,
         days: totalPrice.days,

@@ -36,8 +36,17 @@ export default function BookingModal({ isOpen, onClose, car }: BookingModalProps
   // Calculate total price and check availability whenever dates or price changes
   useEffect(() => {
     if (formData.pickUpDate) {
-      const calculation = calculateTotalPrice(car.price_per_day, formData.pickUpDate, formData.dropOffDate);
-      setTotalPrice(calculation);
+      // Calculate total price
+      const calculatePrice = async () => {
+        try {
+          const calculation = await calculateTotalPrice(car.price_per_day, formData.pickUpDate, formData.dropOffDate);
+          setTotalPrice(calculation);
+        } catch (error) {
+          console.error('Error calculating price:', error);
+          setTotalPrice({ totalPrice: car.price_per_day, days: 1 });
+        }
+      };
+      calculatePrice();
       
       // Check availability
       const checkAvailability = async () => {

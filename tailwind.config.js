@@ -14,7 +14,7 @@ module.exports = {
           200: '#99f6e4',
           300: '#5eead4',
           400: '#2dd4bf',
-          500: '#40E0BA',
+          500: '#2ee5b5',
           600: '#36C7A3',
           700: '#2ba584',
           800: '#238470',
@@ -32,7 +32,7 @@ module.exports = {
           800: '#383838',
           900: '#1A1A1A',
         },
-        cream: '#F9F7F2',
+        cream: '#e0d4ad',
       },
       fontFamily: {
         'inter': ['Inter', 'sans-serif'],

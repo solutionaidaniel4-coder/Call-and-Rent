@@ -11,20 +11,9 @@ export async function getCars(): Promise<Car[]> {
       return [
         {
           id: '1',
-          name: 'BMW 3 Series',
+          name: 'Mercedes-Benz W-204',
           category: 'Premium',
           price_per_day: 150,
-          transmission: 'Automatic',
-          image: '/api/placeholder/400/300',
-          status: 'available',
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        },
-        {
-          id: '2',
-          name: 'Mercedes C-Class',
-          category: 'Premium',
-          price_per_day: 160,
           transmission: 'Automatic',
           image: '/cars/mercedes-w204.jpg',
           status: 'available',
@@ -32,23 +21,45 @@ export async function getCars(): Promise<Car[]> {
           updated_at: new Date().toISOString()
         },
         {
-          id: '3',
-          name: 'Toyota RAV4',
+          id: '2',
+          name: 'Hyundai Tucson',
           category: 'SUV',
           price_per_day: 120,
           transmission: 'Automatic',
-          image: '/api/placeholder/400/300',
+          image: '/cars/tucson.jpg',
+          status: 'available',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        },
+        {
+          id: '3',
+          name: 'Hyundai Avante (Unit 1)',
+          category: 'Economy',
+          price_per_day: 80,
+          transmission: 'Automatic',
+          image: '/cars/avante.jpg',
           status: 'available',
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString()
         },
         {
           id: '4',
-          name: 'Nissan Sentra',
+          name: 'Hyundai Avante (Unit 2)',
           category: 'Economy',
           price_per_day: 80,
-          transmission: 'Manual',
-          image: '/api/placeholder/400/300',
+          transmission: 'Automatic',
+          image: '/cars/avante-1.jpg',
+          status: 'available',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        },
+        {
+          id: '5',
+          name: 'KIA K3',
+          category: 'Economy',
+          price_per_day: 70,
+          transmission: 'Automatic',
+          image: '/cars/kia-k3.jpg',
           status: 'available',
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString()
@@ -283,6 +294,49 @@ export async function sendContactForm(formData: {
     return {
       success: false,
       message: 'An error occurred while sending your message.'
+    };
+  }
+}
+
+// Send car inquiry to n8n webhook
+export async function sendCarInquiry(carId: string, carName: string): Promise<{ success: boolean; message: string }> {
+  try {
+    const n8nWebhookUrl = process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL;
+
+    if (!n8nWebhookUrl || n8nWebhookUrl === 'your_n8n_webhook_url') {
+      console.log('n8n webhook not configured, logging inquiry locally:', { carId, carName });
+      return {
+        success: true,
+        message: `Inquiry for ${carName} (ID: ${carId}) recorded. We will contact you soon!`
+      };
+    }
+
+    const response = await fetch(n8nWebhookUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        carId,
+        carName,
+        timestamp: new Date().toISOString(),
+        type: 'car_inquiry'
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return {
+      success: true,
+      message: `Inquiry for ${carName} sent successfully! We will contact you soon.`
+    };
+  } catch (error) {
+    console.error('Error sending car inquiry to n8n:', error);
+    return {
+      success: false,
+      message: 'Failed to send inquiry. Please try again or contact us directly.'
     };
   }
 }

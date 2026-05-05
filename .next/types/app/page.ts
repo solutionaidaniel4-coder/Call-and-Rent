@@ -1,4 +1,4 @@
-// File: C:\Users\Cabro\CascadeProjects\windsurf-project\src\app\page.tsx
+// File: C:\Users\Cabro\OneDrive\Documenten\windsurf-project\src\app\page.tsx
 import * as entry from '../../../src/app/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

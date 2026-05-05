@@ -4,7 +4,7 @@ import { useState, useMemo, useEffect } from 'react';
 import CarCard from '@/components/CarCard';
 import FilterDrawer from '@/components/FilterDrawer';
 import Header from '@/components/Header';
-import { getCars } from '@/app/actions/booking';
+import { getCars, sendCarInquiry } from '@/app/actions/booking';
 import { Car } from '@/lib/supabase';
 
 export default function Home() {
@@ -13,6 +13,7 @@ export default function Home() {
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState<boolean>(false);
   const [cars, setCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [inquiryMessage, setInquiryMessage] = useState<string>('');
 
   // Fetch cars from Supabase on component mount
   useEffect(() => {
@@ -35,6 +36,18 @@ export default function Home() {
     setSelectedTransmission('all');
   };
 
+  const handleInquire = async (carId: string, carName: string) => {
+    setInquiryMessage(`Sending inquiry for ${carName}...`);
+    try {
+      const result = await sendCarInquiry(carId, carName);
+      setInquiryMessage(result.message);
+      setTimeout(() => setInquiryMessage(''), 5000);
+    } catch (error) {
+      setInquiryMessage('Failed to send inquiry. Please try again.');
+      setTimeout(() => setInquiryMessage(''), 5000);
+    }
+  };
+
   const filteredCars = useMemo(() => {
     return cars.filter((car) => {
       const categoryMatch = selectedCategory === 'all' || car.category === selectedCategory;
@@ -51,27 +64,34 @@ export default function Home() {
       {/* Sticky Header */}
       <Header />
 
+      {/* Inquiry Notification Banner */}
+      {inquiryMessage && (
+        <div className="fixed top-20 left-1/2 transform -translate-x-1/2 z-50 bg-charcoal-900 text-white px-6 py-3 rounded-xl shadow-lg">
+          <p className="text-sm font-medium">{inquiryMessage}</p>
+        </div>
+      )}
+
       {/* Hero Section */}
       <section className="py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-4xl md:text-6xl font-bold mb-6 text-charcoal-900 tracking-tight">
-              Drive Tirana <span style={{ color: '#40E0BA' }}>Your Way</span>
+              Drive Tirana <span style={{ color: '#2ee5b5' }}>Your Way</span>
             </h1>
             <p className="text-lg md:text-xl text-charcoal-600 mb-10 max-w-2xl mx-auto leading-relaxed">
               Premium car rentals in Tirana with 24/7 support and no hidden fees
             </p>
             <div className="flex items-center justify-center gap-4 text-sm text-charcoal-500">
               <span className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#40E0BA' }}></div>
+                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#2ee5b5' }}></div>
                 Instant Booking
               </span>
               <span className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#40E0BA' }}></div>
+                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#2ee5b5' }}></div>
                 Free Cancellation
               </span>
               <span className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#40E0BA' }}></div>
+                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#2ee5b5' }}></div>
                 24/7 Support
               </span>
             </div>
@@ -97,7 +117,7 @@ export default function Home() {
               <span className="text-charcoal-700 font-medium">Filters</span>
               <div className="flex items-center space-x-2">
                 {(selectedCategory !== 'all' || selectedTransmission !== 'all') && (
-                  <span className="text-xs px-2 py-1 rounded-full" style={{ backgroundColor: '#40E0BA', color: 'white' }}>
+                  <span className="text-xs px-2 py-1 rounded-full" style={{ backgroundColor: '#2ee5b5', color: 'white' }}>
                     {selectedCategory !== 'all' && selectedTransmission !== 'all' ? '2' : '1'}
                   </span>
                 )}
@@ -124,7 +144,7 @@ export default function Home() {
                       ? 'text-charcoal-900 shadow-sm'
                       : 'text-charcoal-600 hover:text-charcoal-900'
                   }`}
-                  style={selectedCategory === category ? { backgroundColor: '#40E0BA15' } : {}}
+                  style={selectedCategory === category ? { backgroundColor: '#2ee5b515' } : {}}
                 >
                   {category === 'all' ? 'All' : category}
                 </button>
@@ -144,7 +164,7 @@ export default function Home() {
                       ? 'text-charcoal-900 shadow-sm'
                       : 'text-charcoal-600 hover:text-charcoal-900'
                   }`}
-                  style={selectedTransmission === transmission ? { backgroundColor: '#40E0BA15' } : {}}
+                  style={selectedTransmission === transmission ? { backgroundColor: '#2ee5b515' } : {}}
                 >
                   {transmission === 'all' ? 'All' : transmission}
                 </button>
@@ -167,13 +187,13 @@ export default function Home() {
           {filteredCars.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredCars.map((car) => (
-                <CarCard key={car.id} car={car} />
+                <CarCard key={car.id} car={car} onInquire={handleInquire} />
               ))}
             </div>
           ) : (
             <div className="text-center py-16">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style={{ backgroundColor: '#40E0BA15' }}>
-                <svg className="w-8 h-8" style={{ color: '#40E0BA' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style={{ backgroundColor: '#2ee5b515' }}>
+                <svg className="w-8 h-8" style={{ color: '#2ee5b5' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
@@ -184,7 +204,7 @@ export default function Home() {
                   setSelectedTransmission('all');
                 }}
                 className="text-sm font-medium transition-colors hover:opacity-80"
-                style={{ color: '#40E0BA' }}
+                style={{ color: '#2ee5b5' }}
               >
                 Clear all filters
               </button>

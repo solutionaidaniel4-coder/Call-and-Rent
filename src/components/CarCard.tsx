@@ -11,9 +11,15 @@ interface CarCardProps {
     transmission: string;
     image: string;
   };
+  onInquire?: (carId: string, carName: string) => void;
 }
 
-export default function CarCard({ car }: CarCardProps) {
+export default function CarCard({ car, onInquire }: CarCardProps) {
+  const handleInquire = () => {
+    if (onInquire) {
+      onInquire(car.id, car.name);
+    }
+  };
   const getTransmissionIcon = (transmission: string) => {
     return <Settings className="w-5 h-5 text-charcoal-600" />;
   };
@@ -32,7 +38,7 @@ export default function CarCard({ car }: CarCardProps) {
   };
 
   return (
-    <div className="group bg-white rounded-2xl border border-charcoal-100 overflow-hidden hover:shadow-lg hover:border-charcoal-200 transition-all duration-300">
+    <div className="group bg-white rounded-2xl border border-black overflow-hidden hover:shadow-lg transition-all duration-300">
       {/* Car Image Area */}
       <div className="relative h-48 bg-gradient-to-br from-charcoal-50 to-charcoal-100 overflow-hidden">
         {/* Category Badge */}
@@ -53,8 +59,8 @@ export default function CarCard({ car }: CarCardProps) {
               const target = e.target as HTMLImageElement;
               target.style.display = 'none';
               target.parentElement!.innerHTML = `
-                <div class="w-32 h-20 rounded-lg flex items-center justify-center" style="background-color: #40E0BA20;">
-                  <svg class="w-12 h-12" style="color: #40E0BA;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="w-32 h-20 rounded-lg flex items-center justify-center" style="background-color: #2ee5b520;">
+                  <svg class="w-12 h-12" style="color: #2ee5b5;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
                   </svg>
                 </div>
@@ -70,7 +76,7 @@ export default function CarCard({ car }: CarCardProps) {
         <h3 className="text-xl font-bold text-charcoal-900 mb-2">{car.name}</h3>
         
         {/* Specs Row */}
-        <div className="flex items-center gap-4 mb-4 text-sm text-charcoal-600">
+        <div className="flex items-center gap-4 mb-4 text-sm text-gray-600 font-mono">
           <span className="flex items-center gap-1">
             <Settings className="w-4 h-4" />
             {car.transmission}
@@ -82,14 +88,22 @@ export default function CarCard({ car }: CarCardProps) {
         </div>
 
         {/* Divider */}
-        <div className="border-t border-charcoal-100 my-4"></div>
+        <div className="border-t border-black my-4"></div>
 
-        {/* Price Row */}
+        {/* Price & Inquire Row */}
         <div className="flex items-center justify-between">
           <div>
             <div className="text-3xl font-bold" style={{ color: '#40E0BA' }}>${car.price_per_day}</div>
-            <div className="text-sm text-charcoal-500">per day</div>
+            <div className="text-sm text-gray-500">per day</div>
           </div>
+          
+          <button
+            onClick={handleInquire}
+            className="px-6 py-3 rounded-xl font-semibold text-white transition-all duration-200 hover:opacity-90 hover:shadow-md"
+            style={{ backgroundColor: '#40E0BA' }}
+          >
+            Inquire
+          </button>
         </div>
       </div>
     </div>

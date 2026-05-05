@@ -27,7 +27,7 @@ export default function Header({ onContactClick }: HeaderProps) {
             {/* Logo */}
             <div className="flex items-center">
               <div className="flex items-center space-x-3">
-                <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#40E0BA' }}>
+                <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#2ee5b5' }}>
                   <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
                   </svg>
@@ -41,7 +41,7 @@ export default function Header({ onContactClick }: HeaderProps) {
               <button 
                 onClick={handleContactClick}
                 className="font-semibold py-2.5 px-5 rounded-xl text-white transition-all duration-200 hover:opacity-90 hover:shadow-md"
-                style={{ backgroundColor: '#40E0BA' }}
+                style={{ backgroundColor: '#2ee5b5' }}
               >
                 Contact
               </button>
